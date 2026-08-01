@@ -9,7 +9,14 @@
 <p align="center">
   <a href="https://github.com/sponsors/oliverpalonkorp"><img src="https://img.shields.io/badge/Sponsor-%E2%99%A5-db61a2?logo=githubsponsors&logoColor=white" alt="Sponsor SideType"></a>
   &nbsp;
+  <a href="https://sidesuite.app/sidetype"><img src="https://img.shields.io/badge/SideSuite-sidesuite.app-1b5f56" alt="SideType on sidesuite.app"></a>
+  &nbsp;
   <img src="https://img.shields.io/badge/License-Apache--2.0-4a9e8f" alt="License: Apache-2.0">
+</p>
+
+<p align="center">
+  One of three open-source apps for the SP-01 — see <a href="https://sidesuite.app">sidesuite.app</a>,
+  or install all of them at once from the <a href="#-install-it">SideSuite app pack</a>.
 </p>
 
 SideType is a free, open-source keyboard (an Android "input method") for the
@@ -254,24 +261,49 @@ if you type Finnish.
 > the phone (including JakeType, if you've installed that) and removes nothing. You choose which
 > keyboard is active whenever you like, and you can always switch back.
 
-### The easy way (pre-built app)
+There are two ways in. Pick whichever suits you; both install the same signed app.
+
+### On a Sidephone SP-01: the App Pack
+
+The SP-01's **Library** app can add extra sources, called app packs. Adding the SideSuite pack
+means SideType installs with **no "unknown sources" warning**, and updates **arrive on their own**.
+The Library is a privileged system installer, so it can do what a sideloaded APK cannot.
+
+<p align="center"><img src="docs/brand/app-pack-qr.png" alt="QR code for the SideSuite app pack" width="220"></p>
+
+1. Open **Library → Settings → App Packs → +**
+2. Scan the code above. Or type the address in by hand:
+   `https://fdroid.sidesuite.app/fdroid/repo`
+3. Check the fingerprint shown on screen matches this, then add the pack:
+
+   ```
+   61FD7A8F0D32925EE80C7F55A6690C2A02C2FC3CA9C678370BF623EAB29870A0
+   ```
+
+4. Find **SideType** in the Library and install it.
+
+Already installed SideType by hand? Add the pack anyway; your next update comes down
+automatically, with nothing to uninstall. (Background updates use Wi-Fi by default.)
+
+### Anywhere else: Releases, or Obtainium
 
 1. Download the latest `SideType.apk` from the [Releases page](../../releases).
-2. Copy it to your Sidephone and open it to install. (You may need to allow "install from unknown
-   sources" — Android will prompt you.)
-3. Open **Settings → System → Languages & input → On-screen keyboard** (wording varies), and
+2. Copy it to your phone and open it to install. (Android will ask you to allow "install from
+   unknown sources".)
+
+For hands-off updates without the pack, install
+**[Obtainium](https://github.com/ImranR98/Obtainium)** and add this repo's URL; it watches
+Releases and notifies you whenever a new one is published.
+
+### Then, either way
+
+1. Open **Settings → System → Languages & input → On-screen keyboard** (wording varies), and
    **enable SideType**.
-4. Then **switch to** SideType as your current keyboard.
+2. Then **switch to** SideType as your current keyboard.
 
 <!-- SCREENSHOT STUB: Android keyboard picker showing "SideType" in the list.
      Save as screenshots/sidephone/keyboard-picker.png -->
 <p align="center"><img src="screenshots/sidephone/keyboard-picker.png" alt="SideType in the Android on-screen keyboard list" width="300"></p>
-
-### Getting updates automatically
-
-For hands-off updates, install **[Obtainium](https://github.com/ImranR98/Obtainium)**, add this repo's
-URL, and it will notify you whenever a new release is published — no app store needed. (A plain APK
-download works too; you just won't get update notifications.)
 
 If you'd rather build it yourself, see [For developers](#-for-developers-build-from-source) below.
 Maintainers cutting a release: see [`RELEASE.md`](RELEASE.md).
