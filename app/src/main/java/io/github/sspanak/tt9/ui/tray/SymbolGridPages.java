@@ -20,12 +20,27 @@ import io.github.sspanak.tt9.util.chars.Characters;
  * Emojis start with the most recently used ones. Symbols: the language's own punctuation first (the "1" key list and its extra group, then the
  * currency group), followed by the curated table in {@link EmojiData}. Emojis: every group of the
  * Unicode list in {@link EmojiData}, in order. Both are deduplicated and keep only single glyphs, which also drops
- * the "(…)" show-more markers the suggestion bar uses.
+ * the "(…)" show-more markers the suggestion bar uses. The first symbol page follows the keycaps.
  */
 public class SymbolGridPages {
 	public static final int PAGE_SIZE = SymbolGrid.CELLS;
 
 	@Nullable private static ArrayList<String> emojiCache;
+
+
+	/**
+	 * Sidephone: on the first symbol page the symbols printed on the tile sit on their own keys, so
+	 * the grid matches the keycaps: QW = !, OP = ., AS = ?, L = ,, ZX = @. The numerals printed on the
+	 * other keys are not symbols and are not placed. Cell indices are those of SymbolGrid.
+	 */
+	private static final String[] FIRST_PAGE_PINNED = new String[SymbolGrid.CELLS];
+	static {
+		FIRST_PAGE_PINNED[0] = "!";  // QW
+		FIRST_PAGE_PINNED[4] = ".";  // OP
+		FIRST_PAGE_PINNED[5] = "?";  // AS
+		FIRST_PAGE_PINNED[9] = ",";  // L
+		FIRST_PAGE_PINNED[10] = "@"; // ZX
+	}
 
 
 	@NonNull
@@ -39,7 +54,26 @@ public class SymbolGridPages {
 		}
 		addGlyphs(unique, List.of(EmojiData.SYMBOLS));
 
-		return new ArrayList<>(unique);
+		// first page: the pinned symbols on their keys, the rest of the list filling the other cells
+		for (String pinned : FIRST_PAGE_PINNED) {
+			if (pinned != null) {
+				unique.remove(pinned);
+			}
+		}
+
+		ArrayList<String> rest = new ArrayList<>(unique);
+		ArrayList<String> all = new ArrayList<>(rest.size() + SymbolGrid.CELLS);
+		int next = 0;
+		for (int cell = 0; cell < SymbolGrid.CELLS; cell++) {
+			if (FIRST_PAGE_PINNED[cell] != null) {
+				all.add(FIRST_PAGE_PINNED[cell]);
+			} else {
+				all.add(next < rest.size() ? rest.get(next++) : "");
+			}
+		}
+		all.addAll(rest.subList(Math.min(next, rest.size()), rest.size()));
+
+		return all;
 	}
 
 
