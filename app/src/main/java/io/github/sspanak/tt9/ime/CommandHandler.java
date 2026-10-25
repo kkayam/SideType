@@ -130,8 +130,8 @@ abstract public class CommandHandler extends TextEditingHandler {
 
 	/**
 	 * Key dispatch while the grid is open. The 14 letter keys pick their cell, the ▲▼ key turns the
-	 * page, and Backspace / Space / Enter just close the grid. Anything else (Shift, the navigation
-	 * row) is left alone.
+	 * page, and Space / Enter just close the grid. Anything else (Backspace, Shift, the navigation
+	 * row) is left alone and works as usual.
 	 */
 	@Override
 	protected boolean onSymbolGridKey(int keyCode) {
@@ -146,10 +146,12 @@ abstract public class CommandHandler extends TextEditingHandler {
 			return true;
 		}
 
-		if (Key.isBackspace(settings, keyCode) || keyCode == KeyEvent.KEYCODE_SPACE || Key.isOK(keyCode)) {
+		if (keyCode == KeyEvent.KEYCODE_SPACE || Key.isOK(keyCode)) {
 			hideSymbolGrid();
 			return true;
 		}
+
+		// Backspace is not intercepted: it deletes as usual and the grid stays open
 
 		return false;
 	}
