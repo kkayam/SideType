@@ -31,6 +31,9 @@ class SettingsTyping extends SettingsMindReading {
 	public boolean getAutoCapitalsAfterNewlineAbc() {
 		return getAutoTextCaseAbc() && prefs.getBoolean("auto_capitals_after_newline_abc", false);
 	}
+	public boolean getLearnAbcWords() {
+		return prefs.getBoolean("learn_abc_words", true);
+	}
 
 	public int getAutoAcceptTimeoutPredictive() {
 		int time = getStringifiedInt(DropDownPredictiveAutoAcceptTime.NAME, DropDownPredictiveAutoAcceptTime.DEFAULT);

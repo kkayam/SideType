@@ -94,6 +94,9 @@ public abstract class HotkeyHandler extends CommandHandler {
 			return true;
 		}
 
+		// Nothing left to accept, so Enter (or the editor action) ends the current word
+		mInputMode.onFinishWord();
+
 		int action = appHacks.getEditorAction(settings);
 
 		boolean actionPerformed;

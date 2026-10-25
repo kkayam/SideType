@@ -71,6 +71,7 @@ abstract public class CommandHandler extends TextEditingHandler {
 
 		suggestionOps.cancelDelayedAccept();
 		mInputMode.onAcceptSuggestion(suggestionOps.acceptIncomplete());
+		mInputMode.onFinishWord(); // a word typed in ABC mode is complete once the user leaves ABC mode
 		resetKeyRepeat();
 
 		mInputMode = InputMode.getInstance(settings, mLanguage, inputType, textField, modeId);
