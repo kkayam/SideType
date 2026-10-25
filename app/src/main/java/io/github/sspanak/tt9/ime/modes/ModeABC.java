@@ -75,18 +75,24 @@ class ModeABC extends InputMode {
 			ArrayList<String> newSuggestions = new ArrayList<>(1);
 			newSuggestions.add(language.getKeyNumeral(number));
 			suggestions = newSuggestions;
-		} else if (repeat > 0 && !suggestions.isEmpty()) {
-			autoAcceptTimeout = settings.getAutoAcceptTimeoutAbc();
-			shouldSelectNextLetter = true;
 		} else {
-			reset();
-			autoAcceptTimeout = settings.getAutoAcceptTimeoutAbc();
-			digitSequence = String.valueOf(number);
-			shouldSelectNextLetter = false;
-
 			// Sidephone: only the key's letters rotate. The printed numeral or symbol (! 1 2 . ? ' @ …)
 			// is typed by holding the key, and punctuation lives in the SYM grid.
-			suggestions = new ArrayList<>(KEY_CHARACTERS.size() > number ? KEY_CHARACTERS.get(number) : settings.getOrderedKeyChars(language, number));
+			final ArrayList<String> keyChars = new ArrayList<>(KEY_CHARACTERS.size() > number ? KEY_CHARACTERS.get(number) : settings.getOrderedKeyChars(language, number));
+
+			if (repeat > 0 && !suggestions.isEmpty() && keyChars.size() > 1) {
+				// a repeat press cycles the key's letters
+				autoAcceptTimeout = settings.getAutoAcceptTimeoutAbc();
+				shouldSelectNextLetter = true;
+			} else {
+				// A fresh press, or a repeat on a one-letter key (L, M), where there is nothing to cycle:
+				// the pending letter is accepted and the key types again at once, so "ll" needs no wait.
+				reset();
+				autoAcceptTimeout = settings.getAutoAcceptTimeoutAbc();
+				digitSequence = String.valueOf(number);
+				shouldSelectNextLetter = false;
+				suggestions = keyChars;
+			}
 		}
 
 		return true;
