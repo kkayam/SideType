@@ -343,9 +343,10 @@ public class SuggestionOps {
 			statusBar.setShown(willBeEmpty || !areSuggestionsVisible);
 		}
 
-		// Sidephone: the strip exists only while there is something to show in it
+		// Sidephone: the strip exists only while there is something to show in it. In ABC mode the
+		// letter choices are hidden (unless "Show Letter Suggestions" is on), so the strip stays down.
 		if (mainView != null) {
-			mainView.onSuggestionsChanged(!willBeEmpty);
+			mainView.onSuggestionsChanged(!willBeEmpty && areSuggestionsVisible);
 		}
 	}
 }
