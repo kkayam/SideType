@@ -84,9 +84,9 @@ class ModeABC extends InputMode {
 			digitSequence = String.valueOf(number);
 			shouldSelectNextLetter = false;
 
-			ArrayList<String> newSuggestions = new ArrayList<>(KEY_CHARACTERS.size() > number ? KEY_CHARACTERS.get(number) : settings.getOrderedKeyChars(language, number));
-			newSuggestions.add(language.getKeyNumeral(number));
-			suggestions = newSuggestions;
+			// Sidephone: only the key's letters rotate. The printed numeral or symbol (! 1 2 . ? ' @ …)
+			// is typed by holding the key, and punctuation lives in the SYM grid.
+			suggestions = new ArrayList<>(KEY_CHARACTERS.size() > number ? KEY_CHARACTERS.get(number) : settings.getOrderedKeyChars(language, number));
 		}
 
 		return true;

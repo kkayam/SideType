@@ -23,6 +23,7 @@ import io.github.sspanak.tt9.ime.helpers.TextSelection;
 import io.github.sspanak.tt9.ime.mindreader.MindReader;
 import io.github.sspanak.tt9.ime.modes.InputMode;
 import io.github.sspanak.tt9.ime.modes.InputModeKind;
+import io.github.sspanak.tt9.ime.modes.helpers.Sequences;
 import io.github.sspanak.tt9.languages.Language;
 import io.github.sspanak.tt9.languages.LanguageCollection;
 import io.github.sspanak.tt9.languages.LanguageKind;
@@ -229,6 +230,20 @@ public abstract class TypingHandler extends KeyPadHandler {
 		suggestionOps.cancelDelayedAccept();
 
 		hold = hold && settings.getHoldToType();
+
+		// Sidephone: the space key types a space and nothing else. No whitespace/symbol list to scroll,
+		// no "00" character; punctuation lives in the SYM grid. Holding it still types "0", and the
+		// number mode keeps its digit.
+		if (
+			key == Sequences.CHARS_0_KEY
+			&& !hold
+			&& !InputModeKind.isNumeric(mInputMode)
+			&& !InputModeKind.isPassthrough(mInputMode)
+			&& mLanguage != null
+			&& mLanguage.hasSpaceBetweenWords()
+		) {
+			return onText(Characters.getSpace(mLanguage), false);
+		}
 		String[] surroundingChars = textField.getSurroundingStringForAutoAssistance(settings, mInputMode);
 		String lastWord = null;
 
