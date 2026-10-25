@@ -168,7 +168,9 @@ abstract public class CommandHandler extends TextEditingHandler {
 		if (symbolGridMode == GRID_EMOJIS) {
 			settings.addRecentEmoji(glyph); // first page next time
 		}
-		hideSymbolGrid();
+		if (!settings.getSymbolGridKeepOpen()) {
+			hideSymbolGrid();
+		}
 		onText(glyph, false);
 	}
 
