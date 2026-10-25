@@ -89,7 +89,7 @@ abstract public class CommandHandler extends TextEditingHandler {
 
 		symbolGridMode = mode;
 		symbolGridPage = 0;
-		symbolGridItems = mode == GRID_EMOJIS ? SymbolGridPages.emojis(settings) : SymbolGridPages.symbols(settings, mLanguage);
+		symbolGridItems = mode == GRID_EMOJIS ? SymbolGridPages.emojis(this, settings) : SymbolGridPages.symbols(settings, mLanguage);
 		renderSymbolGrid();
 	}
 

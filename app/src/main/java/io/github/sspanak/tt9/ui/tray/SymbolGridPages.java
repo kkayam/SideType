@@ -1,5 +1,7 @@
 package io.github.sspanak.tt9.ui.tray;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -16,8 +18,8 @@ import io.github.sspanak.tt9.util.chars.Characters;
  * What the SYM grid shows, split into pages of {@link SymbolGrid#CELLS}.
  * <p>
  * Emojis start with the most recently used ones. Symbols: the language's own punctuation first (the "1" key list and its extra group, then the
- * currency group), followed by the curated table in {@link EmojiData}. Emojis: every category in
- * {@link EmojiData}, in order. Both are deduplicated and keep only single glyphs, which also drops
+ * currency group), followed by the curated table in {@link EmojiData}. Emojis: every group of the
+ * Unicode list in {@link EmojiData}, in order. Both are deduplicated and keep only single glyphs, which also drops
  * the "(…)" show-more markers the suggestion bar uses.
  */
 public class SymbolGridPages {
@@ -42,17 +44,16 @@ public class SymbolGridPages {
 
 
 	/**
-	 * The most recently picked emojis fill the first page on their own; the catalogue starts on the
-	 * next page. Filtering the catalogue by font support
-	 * (EmojiData.getEmojiForCategory) walks thousands of code points, so that part is built once per
-	 * process.
+	 * The most recently picked emojis fill the first page on their own; the Unicode catalogue (see
+	 * EmojiData) starts on the next page, in its official group order. The flattened list is built
+	 * once per process.
 	 */
 	@NonNull
-	public static ArrayList<String> emojis(@NonNull SettingsStore settings) {
+	public static ArrayList<String> emojis(@NonNull Context context, @NonNull SettingsStore settings) {
 		if (emojiCache == null) {
 			LinkedHashSet<String> unique = new LinkedHashSet<>();
-			for (int category = 0; category < EmojiData.CATEGORIES.length; category++) {
-				unique.addAll(EmojiData.getEmojiForCategory(category));
+			for (EmojiData.Category category : EmojiData.getCategories(context)) {
+				unique.addAll(category.emojis());
 			}
 			emojiCache = new ArrayList<>(unique);
 		}
