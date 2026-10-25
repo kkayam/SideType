@@ -38,6 +38,7 @@ import io.github.sspanak.tt9.ui.main.keys.SoftKeyTogglePredictiveMode;
 import io.github.sspanak.tt9.ui.main.keys.SoftKeyVoiceInput;
 import io.github.sspanak.tt9.util.ThemedContextBuilder;
 import io.github.sspanak.tt9.util.sys.DeviceInfo;
+import io.github.sspanak.tt9.util.sys.SystemSettings;
 
 abstract public class BaseMainLayout {
 	private int lastLandscapeBottomInset = -1;
@@ -341,6 +342,21 @@ abstract public class BaseMainLayout {
 
 	/** Tells the layout whether the Sidephone SYM grid is open. It counts as writing, like suggestions. */
 	void setSymbolGridShown(boolean shown) {}
+
+
+	/** Brings a collapsed strip up for a moment to show the status text (e.g. the new input mode). */
+	void flashStatus() {}
+
+
+	/**
+	 * Paints the OS navigation bar to match the keyboard. Layouts that collapse (the Sidephone strip)
+	 * override this to leave the app's own navigation bar visible while collapsed.
+	 */
+	void applyNavigationBar() {
+		if (tt9 != null) {
+			SystemSettings.setNavigationBarBackground(tt9.getWindow().getWindow(), tt9.getSettings(), shouldEnableBackgroundBlending());
+		}
+	}
 
 
 	abstract void showCommandPalette();

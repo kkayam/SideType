@@ -89,7 +89,7 @@ abstract public class CommandHandler extends TextEditingHandler {
 
 		symbolGridMode = mode;
 		symbolGridPage = 0;
-		symbolGridItems = mode == GRID_EMOJIS ? SymbolGridPages.emojis() : SymbolGridPages.symbols(settings, mLanguage);
+		symbolGridItems = mode == GRID_EMOJIS ? SymbolGridPages.emojis(settings) : SymbolGridPages.symbols(settings, mLanguage);
 		renderSymbolGrid();
 	}
 
@@ -103,7 +103,6 @@ abstract public class CommandHandler extends TextEditingHandler {
 		symbolGridPage = ((symbolGridPage % pages) + pages) % pages;
 		symbolGrid.show(SymbolGridPages.page(symbolGridItems, symbolGridPage), (symbolGridPage + 1) + "/" + pages);
 		mainView.setSymbolGridShown(true);
-		statusBar.setText("[ " + getString(symbolGridMode == GRID_EMOJIS ? R.string.function_show_emojis : R.string.function_show_symbols) + " ]");
 		forceShowWindow();
 	}
 
@@ -120,7 +119,6 @@ abstract public class CommandHandler extends TextEditingHandler {
 			symbolGrid.hide();
 		}
 		mainView.setSymbolGridShown(false);
-		resetStatus();
 	}
 
 
@@ -164,6 +162,12 @@ abstract public class CommandHandler extends TextEditingHandler {
 		}
 
 		final String glyph = symbolGridItems.get(index);
+		if (glyph.isEmpty()) {
+			return; // a filler cell on the "recent" page
+		}
+		if (symbolGridMode == GRID_EMOJIS) {
+			settings.addRecentEmoji(glyph); // first page next time
+		}
 		hideSymbolGrid();
 		onText(glyph, false);
 	}
@@ -230,6 +234,8 @@ abstract public class CommandHandler extends TextEditingHandler {
 		statusBar.setText(mInputMode);
 		statusBar.setAccessibilityText(mInputMode);
 		mainView.render();
+		refreshLanguageKey();
+		mainView.flashStatus(); // Sidephone: show the new mode even if the strip is collapsed
 
 		if (settings.isMainLayoutStealth() && !settings.isStatusIconEnabled()) {
 			UI.toastShortSingle(this, mInputMode.getClass().getSimpleName(), mInputMode.toString());

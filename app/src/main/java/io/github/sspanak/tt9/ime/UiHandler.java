@@ -13,6 +13,7 @@ import io.github.sspanak.tt9.commands.CmdNextLanguage;
 import io.github.sspanak.tt9.commands.CmdShowSettings;
 import io.github.sspanak.tt9.hacks.AppHacks;
 import io.github.sspanak.tt9.ime.modes.InputMode;
+import io.github.sspanak.tt9.ime.modes.InputModeKind;
 import io.github.sspanak.tt9.languages.Language;
 import io.github.sspanak.tt9.languages.LanguageCollection;
 import io.github.sspanak.tt9.preferences.settings.SettingsStore;
@@ -158,7 +159,9 @@ abstract class UiHandler extends AbstractHandler {
 		Language language = getFinalContext().getLanguage();
 		languageKey.setVisibility(language != null ? View.VISIBLE : View.GONE);
 		if (language != null) {
-			languageKey.setText(language.getCode().toUpperCase(language.getLocale()));
+			// Sidephone: the chip also says when you are in ABC mode, since nothing else on the strip does
+			final String mode = InputModeKind.isABC(getFinalContext().getInputMode()) ? " abc" : "";
+			languageKey.setText(language.getCode().toUpperCase(language.getLocale()) + mode);
 		}
 	}
 
@@ -175,7 +178,7 @@ abstract class UiHandler extends AbstractHandler {
 		mainView.showKeyboard();
 		mainView.render();
 
-		SystemSettings.setNavigationBarBackground(getWindow().getWindow(), settings, mainView.isBackgroundBlendingEnabled());
+		mainView.applyNavigationBar();
 
 		if (appHacks.isBrutalForceShowNeeded()) {
 			brutalForceShowWindow();

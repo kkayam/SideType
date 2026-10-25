@@ -15,7 +15,7 @@ import io.github.sspanak.tt9.util.chars.Characters;
 /**
  * What the SYM grid shows, split into pages of {@link SymbolGrid#CELLS}.
  * <p>
- * Symbols: the language's own punctuation first (the "1" key list and its extra group, then the
+ * Emojis start with the most recently used ones. Symbols: the language's own punctuation first (the "1" key list and its extra group, then the
  * currency group), followed by the curated table in {@link EmojiData}. Emojis: every category in
  * {@link EmojiData}, in order. Both are deduplicated and keep only single glyphs, which also drops
  * the "(…)" show-more markers the suggestion bar uses.
@@ -42,11 +42,13 @@ public class SymbolGridPages {
 
 
 	/**
-	 * Filtering by font support (EmojiData.getEmojiForCategory) walks thousands of code points, so
-	 * the flattened list is built once per process.
+	 * The most recently picked emojis fill the first page on their own; the catalogue starts on the
+	 * next page. Filtering the catalogue by font support
+	 * (EmojiData.getEmojiForCategory) walks thousands of code points, so that part is built once per
+	 * process.
 	 */
 	@NonNull
-	public static ArrayList<String> emojis() {
+	public static ArrayList<String> emojis(@NonNull SettingsStore settings) {
 		if (emojiCache == null) {
 			LinkedHashSet<String> unique = new LinkedHashSet<>();
 			for (int category = 0; category < EmojiData.CATEGORIES.length; category++) {
@@ -55,7 +57,16 @@ public class SymbolGridPages {
 			emojiCache = new ArrayList<>(unique);
 		}
 
-		return emojiCache;
+		// The recent emojis are a page of their own: however many there are, the catalogue starts on
+		// page 2, so the first page is always "recent" and nothing else.
+		ArrayList<String> all = new ArrayList<>(settings.getRecentEmojis());
+		if (!all.isEmpty()) {
+			while (all.size() % PAGE_SIZE != 0) {
+				all.add("");
+			}
+		}
+		all.addAll(emojiCache);
+		return all;
 	}
 
 

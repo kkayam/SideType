@@ -50,8 +50,9 @@ public class SymbolGrid {
 		container.removeAllViews();
 		final Context context = container.getContext();
 		final int textColor = settings.getKeyboardTextColor();
+		// extra room below the last row, so the OS bar painted under the strip does not sit on it
 		final int pad = dp(context, 4);
-		container.setPadding(pad, pad, pad, pad);
+		container.setPadding(pad, pad, pad, dp(context, 16));
 
 		for (int row = 0; row < ROWS; row++) {
 			LinearLayout rowView = new LinearLayout(context);
@@ -76,7 +77,7 @@ public class SymbolGrid {
 		}
 
 		for (int i = 0; i < CELLS; i++) {
-			final boolean filled = i < items.size();
+			final boolean filled = i < items.size() && !items.get(i).isEmpty();
 			glyphViews[i].setText(filled ? items.get(i) : "");
 			((View) glyphViews[i].getParent()).setAlpha(filled ? 1f : 0.3f);
 		}

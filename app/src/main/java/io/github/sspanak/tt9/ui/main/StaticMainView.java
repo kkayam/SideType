@@ -112,6 +112,18 @@ public class StaticMainView {
 		}
 	}
 
+	public void flashStatus() {
+		if (main != null) {
+			main.flashStatus();
+		}
+	}
+
+	public void applyNavigationBar() {
+		if (main != null) {
+			main.applyNavigationBar();
+		}
+	}
+
 	public void showCommandPalette() {
 		if (main != null) {
 			main.showCommandPalette();
