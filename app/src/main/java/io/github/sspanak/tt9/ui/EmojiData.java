@@ -5,7 +5,7 @@ import android.graphics.Paint;
 import java.util.ArrayList;
 
 /**
- * Shared emoji + symbol catalogue used by both the on-screen drawer ({@link EmojiDrawer}) and the
+ * Shared emoji + symbol catalogue used by the SYM grid (ui.tray.SymbolGridPages) and the
  * key-binds editor (EmojiBindsActivity). Android exposes no categorized emoji API, so the ranges are
  * curated here; hasGlyph() filters out anything the current device font can't actually draw.
  */

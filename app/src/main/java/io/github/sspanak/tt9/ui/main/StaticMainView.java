@@ -100,6 +100,18 @@ public class StaticMainView {
 		main.renderKeys(true);
 	}
 
+	public void onSuggestionsChanged(boolean hasSuggestions) {
+		if (main != null) {
+			main.onSuggestionsChanged(hasSuggestions);
+		}
+	}
+
+	public void setSymbolGridShown(boolean shown) {
+		if (main != null) {
+			main.setSymbolGridShown(shown);
+		}
+	}
+
 	public void showCommandPalette() {
 		if (main != null) {
 			main.showCommandPalette();

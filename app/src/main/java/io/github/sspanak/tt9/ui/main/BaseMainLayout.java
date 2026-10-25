@@ -332,6 +332,17 @@ abstract public class BaseMainLayout {
 	}
 
 
+	/**
+	 * Tells the layout whether there is anything in the suggestion bar. Layouts that only exist while
+	 * writing (the Sidephone strip) collapse to nothing when there is not.
+	 */
+	void onSuggestionsChanged(boolean hasSuggestions) {}
+
+
+	/** Tells the layout whether the Sidephone SYM grid is open. It counts as writing, like suggestions. */
+	void setSymbolGridShown(boolean shown) {}
+
+
 	abstract void showCommandPalette();
 	abstract void showKeyboard();
 	abstract void showTextEditingPalette();

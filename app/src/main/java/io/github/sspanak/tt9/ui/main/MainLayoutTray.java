@@ -1,6 +1,8 @@
 package io.github.sspanak.tt9.ui.main;
 
 import android.content.res.Resources;
+import android.view.View;
+import android.view.WindowInsets;
 
 import androidx.annotation.NonNull;
 
@@ -16,6 +18,11 @@ class MainLayoutTray extends MainLayoutExtraPanel {
 	protected int height;
 	protected boolean isCommandPaletteShown = false;
 	protected boolean isTextEditingPaletteShown = false;
+
+	// Sidephone: the strip is only on screen while there is something in it. Until the first
+	// suggestions arrive there is nothing, so it starts collapsed.
+	private boolean hasSuggestions = false;
+	protected boolean isSymbolGridShown = false;
 
 
 	MainLayoutTray(TraditionalT9 tt9) {
@@ -57,6 +64,65 @@ class MainLayoutTray extends MainLayoutExtraPanel {
 	}
 
 
+	@Override
+	void onSuggestionsChanged(boolean hasSuggestions) {
+		this.hasSuggestions = hasSuggestions;
+		applyCollapse();
+	}
+
+
+	@Override
+	void setSymbolGridShown(boolean shown) {
+		isSymbolGridShown = shown;
+		applyCollapse();
+	}
+
+
+	/**
+	 * Sidephone: there is no resting state for the strip. When nothing is being composed, no palette
+	 * is open and the SYM grid is closed, every part of the view is hidden and the bottom padding
+	 * (the navigation bar allowance) is dropped, so the input view measures to zero height and the
+	 * app behind gets its whole screen back. The window itself stays, which avoids the IME restarts
+	 * that showing and hiding it would cause on every word.
+	 */
+	protected boolean isCollapsed() {
+		return !hasSuggestions && !isSymbolGridShown && !isFnPanelVisible();
+	}
+
+
+	protected void applyCollapse() {
+		if (view == null) {
+			return;
+		}
+
+		final boolean collapsed = isCollapsed();
+		for (int id : new int[]{R.id.keyboard_container, R.id.bumper_left, R.id.bumper_right}) {
+			togglePanel(id, !collapsed);
+		}
+
+		setPadding();
+	}
+
+
+	@Override
+	public void setPadding() {
+		if (view != null && isCollapsed()) {
+			view.setPadding(view.getPaddingLeft(), 0, view.getPaddingRight(), 0);
+		} else {
+			super.setPadding();
+		}
+	}
+
+
+	@Override
+	protected void setPadding(@NonNull View v, @NonNull WindowInsets windowInsets) {
+		super.setPadding(v, windowInsets);
+		if (isCollapsed()) {
+			v.setPadding(v.getPaddingLeft(), 0, v.getPaddingRight(), 0);
+		}
+	}
+
+
 	void showCommandPalette() {
 		super.showCommandPalette();
 		isCommandPaletteShown = true;
@@ -64,6 +130,7 @@ class MainLayoutTray extends MainLayoutExtraPanel {
 		togglePanel(R.id.main_command_keys, true);
 		getHeight(true);
 		renderKeys(false);
+		applyCollapse();
 	}
 
 
@@ -74,6 +141,7 @@ class MainLayoutTray extends MainLayoutExtraPanel {
 		isTextEditingPaletteShown = false;
 		getHeight(true);
 		renderKeys(false);
+		applyCollapse();
 	}
 
 
@@ -85,6 +153,7 @@ class MainLayoutTray extends MainLayoutExtraPanel {
 		togglePanel(R.id.main_command_keys, true);
 		getHeight(true);
 		renderKeys(false);
+		applyCollapse();
 	}
 
 
@@ -121,5 +190,6 @@ class MainLayoutTray extends MainLayoutExtraPanel {
 		setBackgroundBlending();
 		enableClickHandlers();
 		renderKeys(false);
+		applyCollapse();
 	}
 }
