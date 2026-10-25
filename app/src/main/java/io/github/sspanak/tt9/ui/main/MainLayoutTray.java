@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import io.github.sspanak.tt9.R;
 import io.github.sspanak.tt9.ime.TraditionalT9;
+import io.github.sspanak.tt9.ime.modes.InputModeKind;
 import io.github.sspanak.tt9.preferences.settings.SettingsStore;
 import io.github.sspanak.tt9.ui.main.keys.SoftKey;
 import io.github.sspanak.tt9.util.sys.DeviceInfo;
@@ -138,13 +139,19 @@ class MainLayoutTray extends MainLayoutExtraPanel {
 
 
 	/**
-	 * Sidephone: there is no resting state for the strip. When nothing is being composed, no palette
-	 * is open and the SYM grid is closed, every part of the view is hidden and the bottom padding
+	 * Sidephone: outside Predictive mode there is no resting state for the strip. When nothing is
+	 * being composed, no palette is open and the SYM grid is closed, every part of the view is hidden and the bottom padding
 	 * (the navigation bar allowance) is dropped, so the input view measures to zero height and the
 	 * app behind gets its whole screen back. The window itself stays, which avoids the IME restarts
 	 * that showing and hiding it would cause on every word.
 	 */
 	protected boolean isCollapsed() {
+		// In Predictive mode the strip is always up (it shows the mode when there is nothing to
+		// suggest); only ABC mode and the number mode collapse it between words.
+		if (InputModeKind.isPredictive(tt9.getInputMode())) {
+			return false;
+		}
+
 		return !hasSuggestions && !isSymbolGridShown && !isFlashing && !isFnPanelVisible();
 	}
 
