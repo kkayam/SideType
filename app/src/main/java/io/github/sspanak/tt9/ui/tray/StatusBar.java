@@ -112,29 +112,9 @@ public class StatusBar {
 			trayContainer.setBackgroundColor(host.barBackground(Color.TRANSPARENT));
 		}
 
-		setQuickActionColors(foreground);
 		setTopSeparatorColor(host);
 
 		return this;
-	}
-
-
-	/**
-	 * The Sidephone language chip declares {@code ?attr/colorKeyboardText} in XML, which resolves once
-	 * at inflation from the static theme. Without this it stays at the theme color and reads as a white
-	 * island on a host tint, so re-apply the tray foreground here on every color-scheme pass. Absent
-	 * from the Classic/Numpad layouts — hence the null check. See SID-17.
-	 */
-	private void setQuickActionColors(int foreground) {
-		final View root = mainView.getView();
-		if (root == null) {
-			return;
-		}
-
-		final TextView languageKey = root.findViewById(R.id.sidephone_language_key);
-		if (languageKey != null) {
-			languageKey.setTextColor(foreground);
-		}
 	}
 
 

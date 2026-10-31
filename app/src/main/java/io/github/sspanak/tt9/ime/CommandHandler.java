@@ -238,7 +238,6 @@ abstract public class CommandHandler extends TextEditingHandler {
 		statusBar.setText(mInputMode);
 		statusBar.setAccessibilityText(mInputMode);
 		mainView.render();
-		refreshLanguageKey();
 		mainView.flashStatus(); // Sidephone: show the new mode even if the strip is collapsed
 
 		if (settings.isMainLayoutStealth() && !settings.isStatusIconEnabled()) {
@@ -287,7 +286,6 @@ abstract public class CommandHandler extends TextEditingHandler {
 		setStatusIcon(mInputMode, mLanguage);
 		statusBar.setText(mInputMode);
 		statusBar.setAccessibilityText(mInputMode);
-		refreshLanguageKey();
 		suggestionOps.setLanguage(mLanguage);
 		mainView.render();
 		if (settings.isMainLayoutStealth() && !settings.isStatusIconEnabled()) {

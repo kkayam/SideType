@@ -3,17 +3,13 @@ package io.github.sspanak.tt9.ime;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import io.github.sspanak.tt9.R;
-import io.github.sspanak.tt9.commands.CmdNextLanguage;
-import io.github.sspanak.tt9.commands.CmdShowSettings;
 import io.github.sspanak.tt9.hacks.AppHacks;
 import io.github.sspanak.tt9.ime.modes.InputMode;
-import io.github.sspanak.tt9.ime.modes.InputModeKind;
 import io.github.sspanak.tt9.languages.Language;
 import io.github.sspanak.tt9.languages.LanguageCollection;
 import io.github.sspanak.tt9.preferences.settings.SettingsStore;
@@ -99,32 +95,6 @@ abstract class UiHandler extends AbstractHandler {
 		statusBar.setColorScheme();
 		createSuggestionBar();
 		getSuggestionOps().setColorScheme();
-		wireQuickActionKeys();
-	}
-
-
-	/**
-	 * Sidephone: the language chip is the strip's only button. Tap cycles the language, long-press
-	 * opens Settings. See panel_small_status_bar.xml.
-	 */
-	private void wireQuickActionKeys() {
-		View view = mainView.getView();
-		if (view == null) {
-			return;
-		}
-
-		View languageKey = view.findViewById(R.id.sidephone_language_key);
-		if (languageKey != null) {
-			languageKey.setOnClickListener(v -> {
-				new CmdNextLanguage().run((TraditionalT9) this);
-				refreshLanguageKey();
-			});
-			languageKey.setOnLongClickListener(v -> {
-				new CmdShowSettings().run((TraditionalT9) this);
-				return true;
-			});
-		}
-		refreshLanguageKey();
 	}
 
 
@@ -133,37 +103,6 @@ abstract class UiHandler extends AbstractHandler {
 	protected void hideSymbolGrid() {}
 	protected boolean isSymbolGridShown() { return false; }
 	protected boolean onSymbolGridKey(int keyCode) { return false; }
-
-
-	/**
-	 * Updates the status-bar language chip to the current language's code (EN / FI / DE …). Shown
-	 * whenever there is a language at all — it used to hide unless two or more were enabled, but it
-	 * now also carries the long-press to Settings, and an affordance that vanishes for
-	 * single-language users is no affordance.
-	 */
-	protected void refreshLanguageKey() {
-		View view = mainView.getView();
-		if (view == null) {
-			return;
-		}
-
-		TextView languageKey = view.findViewById(R.id.sidephone_language_key);
-		if (languageKey == null) {
-			return;
-		}
-
-		// Shown whenever there is a language at all, even if it is the only one. It used to hide unless
-		// two or more were enabled, but it now carries the long-press to Settings — and a settings
-		// affordance that disappears for single-language users is no affordance. Tapping it simply does
-		// nothing when there is nowhere to cycle to.
-		Language language = getFinalContext().getLanguage();
-		languageKey.setVisibility(language != null ? View.VISIBLE : View.GONE);
-		if (language != null) {
-			// Sidephone: the chip also says when you are in ABC mode, since nothing else on the strip does
-			final String mode = InputModeKind.isABC(getFinalContext().getInputMode()) ? " abc" : "";
-			languageKey.setText(language.getCode().toUpperCase(language.getLocale()) + mode);
-		}
-	}
 
 
 	protected void initUi(InputMode inputMode) {

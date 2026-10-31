@@ -8,32 +8,15 @@
 	android:focusable="false"
 	android:focusableInTouchMode="false">
 
-	<!-- Sidephone: the strip holds only the suggestions and the language chip. It is shown while a
-	     word (or the symbol grid) is being composed and collapses to nothing otherwise, so there is no
-	     room for, and no need for, any other buttons. See MainLayoutTray.applyCollapse(). -->
+	<!-- Sidephone: the strip holds only the suggestions (or the status text when there are none).
+	     It is shown while a word or the symbol grid is being composed and collapses to nothing
+	     otherwise, so it carries no buttons. Settings is on the launcher icon; the language and the
+	     input mode are on the arrows key. See MainLayoutTray.applyCollapse(). -->
 	<FrameLayout
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_weight="1">
 		<include layout="@layout/panel_status_bar" />
 	</FrameLayout>
-
-	<!-- Sidephone (right): tap to switch the writing language (shows the current code, e.g. EN / FI /
-	     DE), long-press to open Settings. This is the only on-screen route to Settings, so it must not
-	     hide while the strip is up. See refreshLanguageKey(). -->
-	<TextView
-		android:id="@+id/sidephone_language_key"
-		android:layout_width="wrap_content"
-		android:layout_height="34dp"
-		android:minWidth="44dp"
-		android:paddingStart="8dp"
-		android:paddingEnd="8dp"
-		android:gravity="center"
-		android:textSize="13sp"
-		android:textStyle="bold"
-		android:singleLine="true"
-		android:textColor="?attr/colorKeyboardText"
-		android:background="?android:attr/selectableItemBackgroundBorderless"
-		android:contentDescription="@string/function_next_language" />
 
 </LinearLayout>
